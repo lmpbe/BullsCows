@@ -50,6 +50,10 @@ h3{margin:20px 0 8px;font-size:1.08rem;color:var(--blu)}
 .btn.grande{font-size:1.3rem;padding:14px 34px}
 .btn.secondario{background:#fff;color:var(--blu);border:2px solid var(--blu)}
 .btn.secondario:hover{background:#eef2fc}
+.btn.piccolo{padding:6px 12px;font-size:.9rem;flex:none}
+.riga-partita{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-4px 0 10px}
+.riga-partita .nota{font-weight:600}
+.solo-stretto{display:none}
 .btn.icona{margin-left:auto;padding:0;width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center}
 .btn.icona svg{width:24px;height:24px}
 .btn:focus-visible,.scelta button:focus-visible,.chip:focus-visible,input:focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
@@ -92,8 +96,10 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
   .card{padding:13px}
   .valuta{grid-template-columns:1fr}
   .input-tent input{width:100%}
-  .stato{gap:6px;flex-wrap:nowrap}
-  .pill{padding:5px 9px;font-size:.88rem;white-space:nowrap}
+  .stato{gap:5px;flex-wrap:nowrap}
+  .pill{padding:5px 7px;font-size:clamp(.72rem,3.4vw,.88rem);white-space:nowrap}
+  .solo-largo{display:none}
+  .solo-stretto{display:inline}
   .input-tent .btn{flex:1}
 }
 </style>
@@ -108,7 +114,6 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
     </svg>
     <div>
       <h1>Bulls &amp; Cows</h1>
-      <p>detto anche Numerino – gioco di ragionamento</p>
     </div>
     <button type="button" id="schermo-intero" class="btn secondario icona" hidden aria-label="Schermo intero" title="Schermo intero"></button>
   </div>
@@ -125,7 +130,7 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
 
 <!-- ===================== GIOCA ===================== -->
 <section id="sez-gioca" role="tabpanel" aria-labelledby="tab-gioca">
-  <div class="card">
+  <div class="card" id="g-impostazioni" hidden>
     <h2>Nuova partita</h2>
     <div class="riga">
       <div><span class="etichetta">Numero di cifre</span>
@@ -139,14 +144,19 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
         </span>
       </div>
     </div>
-    <p style="margin:16px 0 0"><button class="btn grande" id="g-gioca">GIOCA</button></p>
+    <p class="riga" style="margin:16px 0 0"><button class="btn grande" id="g-gioca">GIOCA</button>
+      <button class="btn secondario" id="g-annulla" hidden>Torna alla partita</button></p>
   </div>
 
   <div class="card" id="g-partita" hidden>
+    <div class="riga-partita">
+      <span class="nota" id="g-modo"></span>
+      <button class="btn secondario piccolo" id="g-nuova">Nuova partita</button>
+    </div>
     <div class="stato">
       <span class="pill">Tentativo <b id="g-ntent">1</b>/<b id="g-max">13</b></span>
       <span class="pill">Possibili <b id="g-poss">0</b></span>
-      <span class="pill">Tempo <b id="g-tempo">00:00</b></span>
+      <span class="pill" title="Tempo"><span class="solo-largo">Tempo </span><span class="solo-stretto" aria-hidden="true">⏱ </span><b id="g-tempo">00:00</b></span>
     </div>
     <div id="g-area-input">
       <label for="g-input" class="etichetta" id="g-label">Inserisci un numero di 4 cifre</label>
@@ -376,7 +386,9 @@ function aggiungiRiga(s, indice, vinta) {
 
 /* Prepara lo schermo per la partita contenuta in g (nuova o ripristinata) */
 function mostraPartita() {
+  $('g-impostazioni').hidden = true;
   $('g-partita').hidden = false;
+  $('g-modo').textContent = g.n + ' cifre · ' + (g.rip ? 'con ripetizione' : 'senza ripetizione');
   $('g-finale').hidden = true; $('g-finale').innerHTML = '';
   $('g-righe').innerHTML = ''; $('g-tabella').hidden = true;
   $('g-errore').hidden = true;
@@ -386,7 +398,6 @@ function mostraPartita() {
   g.storia.forEach(function (s, i) {
     aggiungiRiga(s, i + 1, g.finita && g.esito === 'vinto' && i === g.storia.length - 1);
   });
-  $('g-gioca').textContent = 'NUOVA PARTITA';
   clearInterval(timerId);
   if (g.finita) {
     $('g-area-input').hidden = true;
@@ -398,6 +409,21 @@ function mostraPartita() {
   aggiornaTempo(); aggiornaStato();
 }
 
+/* «Nuova partita»: mostra la scelta di cifre e ripetizione, nasconde la partita */
+function apriImpostazioni() {
+  chiudiTastierino();
+  $('g-partita').hidden = true;
+  $('g-impostazioni').hidden = false;
+  $('g-annulla').hidden = !g;
+  window.scrollTo(0, 1);
+}
+function chiudiImpostazioni() {
+  if (!g) return;
+  $('g-impostazioni').hidden = true;
+  $('g-partita').hidden = false;
+}
+
+/* «GIOCA»: inizia la partita con le impostazioni scelte */
 function nuovaPartita() {
   if (g && !g.finita && g.storia.length > 0 && !confirm('Interrompere la partita in corso e iniziarne una nuova?')) return;
   var n = Number(leggiCifre()), rip = leggiRip() === '1';
@@ -474,7 +500,7 @@ function mostraFinale() {
           '<button class="btn" id="g-ancora">Nuova partita</button>' +
           (g.esito === 'vinto' ? '<button class="btn secondario" id="g-sfida">Sfida il B&amp;C solver</button>' : '') + '</p>';
   var f = $('g-finale'); f.innerHTML = html; f.hidden = false;
-  $('g-ancora').addEventListener('click', nuovaPartita);
+  $('g-ancora').addEventListener('click', apriImpostazioni);
   if (g.esito === 'vinto') $('g-sfida').addEventListener('click', function () {
     avviaSfida({ segreto: g.segreto, n: g.n, rip: g.rip, tentativi: g.storia.length, tempo: tempo });
   });
@@ -498,6 +524,10 @@ function ripristinaPartita() {
 }
 
 $('g-gioca').addEventListener('click', nuovaPartita);
+$('g-nuova').addEventListener('click', apriImpostazioni);
+$('g-annulla').addEventListener('click', chiudiImpostazioni);
+/* quando si tocca la casella e compare il tastierino, la partita sale in cima allo schermo */
+$('g-input').addEventListener('focus', function () { setTimeout(mostraElenco, 300); });
 $('g-prova').addEventListener('click', prova);
 $('g-arrenditi').addEventListener('click', arrenditi);
 $('g-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') prova(); });
@@ -792,6 +822,7 @@ $('cur-guess').addEventListener('click', function (e) {
 
 /* ---- All'apertura: ripristina partita, solver e scheda aperta ---- */
 ripristinaPartita();
+if (!g) apriImpostazioni();
 ripristinaSolver();
 
 /* Nessuna installazione: rimuove eventuali service worker registrati da versioni precedenti */
