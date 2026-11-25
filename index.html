@@ -92,6 +92,8 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
   .card{padding:13px}
   .valuta{grid-template-columns:1fr}
   .input-tent input{width:100%}
+  .stato{gap:6px;flex-wrap:nowrap}
+  .pill{padding:5px 9px;font-size:.88rem;white-space:nowrap}
   .input-tent .btn{flex:1}
 }
 </style>
@@ -142,9 +144,9 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
 
   <div class="card" id="g-partita" hidden>
     <div class="stato">
-      <span class="pill">Tentativo <b id="g-ntent">1</b> di <b id="g-max">13</b></span>
-      <span class="pill">Numeri ancora possibili: <b id="g-poss">0</b></span>
-      <span class="pill">Tempo: <b id="g-tempo">00:00</b></span>
+      <span class="pill">Tentativo <b id="g-ntent">1</b>/<b id="g-max">13</b></span>
+      <span class="pill">Possibili <b id="g-poss">0</b></span>
+      <span class="pill">Tempo <b id="g-tempo">00:00</b></span>
     </div>
     <div id="g-area-input">
       <label for="g-input" class="etichetta" id="g-label">Inserisci un numero di 4 cifre</label>
@@ -369,7 +371,7 @@ function aggiungiRiga(s, indice, vinta) {
   if (vinta) tr.className = 'vinto';
   tr.innerHTML = '<td>' + indice + '</td><td class="num">' + s.t + '</td><td>' + s.bull + '</td><td>' + s.cow +
                  '</td><td>' + s.poss.toLocaleString('it-IT') + '</td>';
-  $('g-righe').appendChild(tr); $('g-tabella').hidden = false;
+  var corpo = $('g-righe'); corpo.insertBefore(tr, corpo.firstChild); $('g-tabella').hidden = false;
 }
 
 /* Prepara lo schermo per la partita contenuta in g (nuova o ripristinata) */
@@ -407,7 +409,7 @@ function nuovaPartita() {
   };
   salvaPartita();
   mostraPartita();
-  $('g-input').focus();
+  mostraElenco();
 }
 
 function prova() {
@@ -430,7 +432,21 @@ function prova() {
   if (vinta) { termina('vinto'); return; }
   if (g.storia.length >= MAX_TENTATIVI) { termina('perso'); return; }
   salvaPartita();
-  aggiornaStato(); inp.focus();
+  aggiornaStato();
+  chiudiTastierino(); mostraElenco();
+}
+
+/* Chiude il tastierino del telefono togliendo il cursore dalla casella */
+function chiudiTastierino() { var a = document.activeElement; if (a && a.blur) a.blur(); }
+
+/* Porta in alto la zona della partita (contatori, casella, elenco dei tentativi).
+   Si ripete dopo un attimo perché la chiusura del tastierino cambia l'altezza dello schermo. */
+function mostraElenco() {
+  function vai() {
+    var y = $('g-partita').getBoundingClientRect().top + window.scrollY - 8;
+    window.scrollTo({ top: Math.max(1, y), behavior: 'smooth' });
+  }
+  vai(); setTimeout(vai, 350);
 }
 
 function termina(esito) {
@@ -439,6 +455,7 @@ function termina(esito) {
   clearInterval(timerId); aggiornaTempo(); aggiornaStato();
   $('g-area-input').hidden = true;
   mostraFinale();
+  chiudiTastierino(); mostraElenco();
 }
 
 function mostraFinale() {
@@ -457,7 +474,7 @@ function mostraFinale() {
           '<button class="btn" id="g-ancora">Nuova partita</button>' +
           (g.esito === 'vinto' ? '<button class="btn secondario" id="g-sfida">Sfida il B&amp;C solver</button>' : '') + '</p>';
   var f = $('g-finale'); f.innerHTML = html; f.hidden = false;
-  $('g-ancora').addEventListener('click', function () { nuovaPartita(); vaiInCima(); });
+  $('g-ancora').addEventListener('click', nuovaPartita);
   if (g.esito === 'vinto') $('g-sfida').addEventListener('click', function () {
     avviaSfida({ segreto: g.segreto, n: g.n, rip: g.rip, tentativi: g.storia.length, tempo: tempo });
   });
@@ -637,7 +654,7 @@ function aggiungiRigaSolver(guess, bull, cow, vinta) {
   if (vinta) tr.className = 'vinto';
   tr.innerHTML = '<td>' + ($('old-guesses').children.length + 1) + '</td><td class="num">' + guessToString(guess) +
                  '</td><td>' + bull + '</td><td>' + cow + '</td>';
-  $('old-guesses').appendChild(tr);
+  var corpo = $('old-guesses'); corpo.insertBefore(tr, corpo.firstChild);
   $('old-guesses-table').hidden = false;
 }
 
