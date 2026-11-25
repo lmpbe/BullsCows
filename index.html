@@ -215,7 +215,7 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
     <div id="cur-guess-alert" class="avviso errore-box" hidden></div>
     <div id="success" hidden></div>
     <table id="old-guesses-table" hidden>
-      <thead><tr><th>#</th><th>Tentativi</th><th>Bull</th><th>Cow</th></tr></thead>
+      <thead><tr><th>#</th><th>Tentativi</th><th>Bull</th><th>Cow</th><th>Possibili</th></tr></thead>
       <tbody id="old-guesses"></tbody>
     </table>
   </div>
@@ -702,11 +702,23 @@ function mostraTentativoSolver() {
   $('cur-guess').hidden = false;
 }
 
+/* Numeri ancora possibili dopo ogni valutazione: stesso calcolo della tabella del gioco,
+   fatto a parte (il motore del solver non viene toccato) */
+var possibiliSolver = [];
+function filtraPossibiliSolver(guess, bull, cow) {
+  var t = guessToString(guess);
+  possibiliSolver = possibiliSolver.filter(function (c) {
+    var w = valuta(c, t); return w.bull === bull && w.cow === cow;
+  });
+  return possibiliSolver.length;
+}
+
 function aggiungiRigaSolver(guess, bull, cow, vinta) {
+  var poss = filtraPossibiliSolver(guess, bull, cow);
   var tr = document.createElement('tr');
   if (vinta) tr.className = 'vinto';
   tr.innerHTML = '<td>' + ($('old-guesses').children.length + 1) + '</td><td class="num">' + guessToString(guess) +
-                 '</td><td>' + bull + '</td><td>' + cow + '</td>';
+                 '</td><td>' + bull + '</td><td>' + cow + '</td><td>' + poss.toLocaleString('it-IT') + '</td>';
   var corpo = $('old-guesses'); corpo.insertBefore(tr, corpo.firstChild);
   $('old-guesses-table').hidden = false;
 }
@@ -777,6 +789,7 @@ function preparaSolver(numPegs, allowDups) {
   var possibleGuesses = allowDups ? generateAllPossibleGuessesWithDups(numPegs, COLORI)
                                   : generateAllPossibleGuessesNoDups(numPegs, COLORI);
   globalGameState = { numPegs: numPegs, colors: COLORI, allowDups: allowDups, possibleGuesses: possibleGuesses };
+  possibiliSolver = tuttiINumeri(numPegs, allowDups);
   $('start').textContent = 'Ricomincia';
   $('play-area').hidden = false;
 }
