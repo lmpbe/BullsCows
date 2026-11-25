@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bulls &amp; Cows – Numerino</title>
+<meta name="description" content="Bulls and Cows (Numerino): gioco di ragionamento con i numeri, con B&amp;C solver per sfidare il computer.">
+<meta name="author" content="Antonio Bellini">
+<meta name="theme-color" content="#FFF3A8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="B&amp;C">
+<meta name="application-name" content="B&amp;C">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%23FFF3A8'/%3E%3Ctext x='50' y='69' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='56' fill='%23D00000'%3EBC%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAaA0lEQVR42u2deXRc1ZXuv33OvbdGqUqTLVk2HuSJwYBtIMxT2zThAWnTWQQIiyQdHg3dkJcGB7rpF0J3B0jIQMgKdCC8pAMNYabpQGNWSEwIhgyYIRCCjfE8SLaGmqd7z9nvj1uSbbBVVVZJtsX5lqzlpVWW69763XP23mcPxOmHYWS0JwlzC4wMHEYGDiMDh5GBw8jAYWTgMDJwGBk4jAwcRgYOIyMDh5GBw8jAYWTgMDJwGBk4jAwcRgYOIwOHkYHDyMjAYWTgMDJwGBk4jAwcRgYOIwOHkYHDyMBhZOAwMjJwGBk4jAwcRgYOIwOHkYHDyMBhZOAwMnAYGTiMDBxGRgYOIwOHkYHDyMBhZOAwMnAYGTiMDBxGBg6jj58scwv2g7j8Z3cRaBzDsedrHg0dcPdx7/eEwcwMMIOICBACkkACRLu8BmANzawZzABARIJ2vuagh8MSo34x5fvI0Jo1l39CRESgA4kYrVkzCYJtIWCTkIAANLRCocRFl0uKlQZrgEgSLCkcGyGHbAsQAAEKJRdFj5XaX6DUDw4inc5zyRvN9YJIClhSOBaCNjn24H3U8FwUPfYUgP35wGlmrcmSiIZIWGBP9ySLa7sLq7cUV20tbdjubh1QiYxK5zlXYtdjrQEiW4qALaJBEQvbbTFnapvT1R6cMzkwa5I9uYUaooBCrsAljwRBiIMMDlaaGiNbr7m376nfWlKw0qNjPRNZUgRsEQmKxpDV0mhPbnGmtgVndwbmdjpT2ygWBQjFAhdcAiDFmGLBTCGHnABy+fzvVqeXv5359Z8Kb68vbRvQu+2Ie17geJfv/susaDA4pzNy0qENi4+OHD9HtMahXGQL4DG6tHquHCqd9xLZMbA7PnofpW05MyaGj5nZsOiohtPnWdMmgjXSeYBH/VFjZqUpGiLLLq3elHj8lcRjr+TeXKsHvUECLClA5BsT/rcP3yMCAeQveEQAs2aVKWRWfpBe+UHP958JTJsQO+/Y5ktOC31iNgCkciCCGN0FkuoykZqVplh048W39z6yYhRXjiEWMHgj/bvJzErrQVyc5oaGv5zf8jeLomfOA8CpHEk5SuYIe4qCNoKhwlsf7PjBs4lHV7ipHPlMWAKMnQbmPj1vvrXBWrNmDUhBjeceO+HaT0VOm4diifNFsuRBAsdFt/c+8vKow7E3YnyzFNBKa0AAjWcvaL/pM+ETDkMmC811fs6YWTHFo6q7v+cbT/Te+7yXL0mApGBmaK7/liqIPa0AATRfdkbHzRfb0zs4mSIxWuiL8RM50MxKs9JEZElBRMllr79/6o3dN/4UtgXHgq4fsppBRPGG1BMrVp1wffedP+d8yd87WOn6k+HbNJ4G4F9a7/3LV59wfeKh5RRrLL8fA0f1RgCYpRRQasttj6/91C0qW0DAqQ8fWsO24Nhbr7vvg09/s7R+u2VJEPz/dNQvTmkwW5Z0exJrP/vdrdf+CCEHlhgNPsZz+Nzf3WxbDjz/xtpzv65zJVjWSD8/pRFwdNFdd8Ft3d99WkhBgthTYxT829XWIZJSbLvjvzdc9C2GgCXrzocY94FqdpVty9RvV236wp0I2CNiQ2sEbJ0prD333/qffc2yJEZpE6kyHqi0bcveJ17dcNHtkIKFqO/StZ/gEESWrP1LkBQQNcdhfT76nv5d/w+fo8aoHyvbl91KSvb0ugtuTa34s23Lmn8PEUmxy4X4UV2CGPq5hBA1WZflS/v5HzZd8QOKBrmucOyfgzfWrLTCPvslvmviu0XV3Q5WWhBt+9dHYktOkM0RuKpmwhgUDm78zO2Jl961bcmuquEgSIiyG6XKb5d2+c68M+5RdoNrcXl8Prbf/2LosENab7iQE8l6+bdjDQcJ0prD86ZGFx/NhRJV6V4yWGmdL6n+tLttoLR+u9ubUp4SgKjSc9YspChuTw48sLz1hgu5UNsdZE9RPLbj1od3PLbCtmogwyfYUxqAE48E500NHzXN6epwJjXLWJgCNph10VV96dLG3sKqLbk31hb+tNFTmgApBKMqRNjTlhSbv/pg5JTDQp+Yw5k81SOEOuYrhxBaq+jp8yZ958tAqsZ9jQFGsaR60/l3N6WeWznws5eK3QkpqMqHjIj6H/5N65fOIylri+I0hPOvvLPl5odriOIQgeApLYVo+l8Lmz5zSvTkQ63JLZBO+UKw8wB2cMlg5HKFVVtTz60cePDX2Xc3VUs/M4GUqzZffe/Ml79BdQqu76dtJV9iL8mJNFmi1mN6EiRbGqKLjoouXjjhK0t6vv7Y9rv/RwgB1sO7DKy1YOTf2VhctSkwbxqyxSrDYiQFl7zNX/qRdj3LX/CrWyCZ0bzk+In/+Neh42YDhGIR2SLr/CAQg9vKzn2LSIrgvKnB+bParjk38eSr3bc+ll+9VQoqn0UPS7BlifQba/vvXdby5SWcSI18czmIDFJBUpB/SOF6nMpxImnFI513XTP5lku11lTxDIVBUihP5d9cD2lVabuxpxCN9N/3fHrlB5Ylq1k2SAqlWTZHpz/wD9OevDG0cCaSWU5mUPJ2Xrh/LVJAlq/L/yEA5IqcSBKh6XOL5rz6rfYvnav9GHwlI4k1C6Ke259SPf0UsEfuXR+cruyg2Q9XcWKg7cbPxM9eoJSuvJwSASis3gJU5/UxKGDrHQM933hSELGujgylgzPbZy+/JX7pX3Aig2weQ1hX/eQA4ERKBK1Jd141/YF/QNDhinxoFoIK2wYG7v8VQmFW6uMd5xAEArSacO35vrNZzT9ytw0AXM1HxUohFO7/6a8KW/tFFZYNCVJKB6dPnLnsXwLzpvJAkiyxz8fCZEkozQOJ+KWLup64gUJO2fUd3qUi6rvvF5zJkG193INgJAQKxfCCruCUVq54usYMQKfzQFVGJdkWp9K99z4/eN5eKd0JJKOh6Y9eb3e1cyJDtqzDGmlL7h+InnP8tB9epbUe7gKJiCBtmVu9Nb3sdUSCIzwBPfgjpAR4ipqiTleHHkqJqFf0PRxKv/Bm/v1tkqjiuQwJ0lpPvv2y4DFzeSA98gd35292LE4kYpedNeHyxR/ePQkQgiwJQczsKa1KHgPZl98Fk8k+BzNICKs5Wu0DEQ6iyjAkIfHICvazgoeN2vmmRvz0I5qv+CQnk3UkY+j3I59r/9dLEs+85vYkhBSgwfAPa9YgwG5tDB/T1XDavOgphwZmdyKbG6FPO45KE6pZM4gAWBNjlQ1SZgpYamtv+pd/FIyK6zMzk6D2my8erSRnIi6UZEdb25Vnb775Z6TYR9Vy7Mi8Q6KnHt5w+hHhBTNkZyvIgnZRdDHirBprnFChtepPV7XIAIFZkwAefvFgzRQI5H67stSXkoJ4WFOUpPCUji8+OnzK4ZzO0egkeJIUKBWaLjml59v/ZU1ojJx8WMNph0c+McfpakcwBCgUSkjnylnvJEaOqTUe0nwsyQOZ4pptopLDwlpLIcJHTYfyqKLpSjL96z8xKu8pYBDQ8sVFo5uvKgglz+5onv3ybc7kVmqJAYBbQqHEhWS5fEEIEqbibZfPm6Lh7G/eLWzqreBtCqFZh+dMChw+BfkK4VGSAqVi7nerCRh+2QCR1jrQ0dRwxjzkCzT6pQOBw6eg5HEiDQL5h7qjk0l6kHsr/sdGYvt3/guVXBUSxIz4p0+iaKVTe2Y4ltc9UFi1hVAhbk1SaCB6+hFiQhOXvLEorMqVoPTOc3+YWtkPH8Axa022RZHG7f/2QOIXb1li2AMqIq21HQu3fOFMFAsVzAJmOHZpXY+XyFLFEAczgOhpRwA0BmmC5f0F47iQWjN7ij1Vc42Ln2EuJYIOSUcnUt3X/rDnjqelFMPHtkkKz1OdS5dY0zsrZjywBpEsvr9NA5YgVhXtGArPnwHlkhCmyn7E6IcdsuLUKgBZYymTBitO5Ap/3pR+/o2+H/8yv7ZbChrebSNLep6Kn3xo29IlnMlUcV7PAJXWdVf2kAWxZqc97kydgLHZU8YzHJoFkFnxXs+/3MuFIlW9QrLSXHC9/rS7pb+4vqe0brtiFkDFBAuypeeqUFf71AevA4GqKWAhAnRpUx8qle8RkQY7h7SJ5ggK7v4tij/o4WCtCcisXJNauYZq2VRodyvarzFkvwphmDwMZs9VkaOnz3jsBmtSM7KFaqpMCQC02zMAVC7uZMCe3Arb4VyJpIGjDulgJPdxe2Yw2G96sUcs/PxSIdhTntICaLv8rM5vfk40hKokYyiioAayVF3I1e5oqjYHwMBRXasChVHrlaK1kkD8L+dPWLokuuho5ArIFWqoTBeEoquzhSrTAKyWBsC0fcKBHki3mqPBuZOjZx4ZO/eY0PwZIPBAmixRAxkMCGLX0/kSVWcmi4YQwAaOA1tShOfPaDz3mOiJhzrTJ4AAy6JokHNFoup7MTAgWGlUk2LOACCC9kfsIgPHgSZPJV94K/HCWwTY8Uj42JkNZy2InbvQmTsFWnM6X23THyoH2VBlsxEpTKvJg+F6BFlSCCIvkU384q1NX/nJe8dct+Gib+VeeY9iUdhWVQfZjJ0JeVR1CMbAUc+D9n3/GtbUVRrMfiMGSwrOFvseeXn1aTdu+uL3VX8GsUgVZYxMgqovmxjshMYGjrr1Sdg3lRsKDtaX7jWixeV2HfDbdTDv+PELq07+x9yL71C8cVg+CAyyJAUcrs6V1dnC+DM49pvNQY4lwwForu2W+l2UlNIFV2ufkV2KS/VeipqY/cMRy5LFdT3vf/LmGQ9e13DBiZxI7/mEhQDNcGwRCQwZIMO/L5XIGle2HlhY0vPUhItO7bjjck5makyaYlZaF12dynu9qeLanvwf12dffS//zkaltPTjE3vPvWBPSSl0wV178bdnLfta+PQjOZXd8xtgjUBAxsL+0sCVzA13e7LKWgcDRxWIhB3ZHIcjYYuak80FQRCkjPp7Yi6Xe31t309+2X//cu0pKYY7nmWlhRSq5K2/7Htzfv8dGY/A8z76oTKDhLTbYlydKepu7gN7446N/WVzaAZ77Hoo1frlIl9CtsjJLCdSnEhBc/jEuVP+35dnvXRr+PBDVKW6SFZaWrKwua/7pgcRCu45y4sZEPbkloqnssxMQGlzL2cKkHKcmaQHobcidu92AiCT54Fk+IS5M5ffElnYVRUfgvruX158cw2Fg3vZidiZNrGyD8IgwN3U63UnYMtx5rCIcRLcsCUPZGRLdPp/XmvFIhXKSplJCK/k9d+/HLazh8WDCFCBWR0CGD7TB8wkyMsVC+9thmOzNnAckCJbcjJrz53WdtXZinl4U5c1CyD57GucTn+0aJGIUPICM9pl2KlY3k5CMJB7dRUgx/Jglj1dz+aZ4z5CSlLCLTRdeLK0ZIUac60JKK7pLq7agqD94bvsFwFMaQnMaNeVgqS+2ZH+1R9RKtKYxdEFUbwB0ZCfcDlKUIpxdiqLkut0tQenT9SMisUHWuvCnzdDWh+9t+xphMOhhV0MVMgMVVoQcq+vLb67EaHA6DYXZIYtVX/m/dP/79al9xVeX4uwQ/FGOFY54scGjmEOzJSmaNDqbOaKRdVEDJTWbx8mT6fhtCNQqTTBX7E810s8/gosh0dzqWelEQgNPP5K8g/vd3/n6VWfWLpm0U19dz3jbUtQLEqxCPymqHUCVIy77sWAECIcqPL1qi+9tyIXlIqRkw61IwGtdIWdRWsB9N+/XPclyLFGy2VhkG1xIrnjB89YQli2Bc3pX/9pw9X3vLfw2o2f/Xbq579nT1G8EZEAdB36r483OPxxFFx0qw24FN09+5+CuFCyuyZFjp/LRBV2Fs1Civym3v7/eAHhyMhb6uy1AVUk0vfDZfl12wWBXQ+AlMKSwutP9z700gfn37LquKXbbvxp4fW1CAcQDY7QFhl3iQhCIF/0ticJVd2Z4QpYNEPKpgtPqiZTkLncj8vb3ENBp/6Wh9YUCbhrNnff/qTYpbB711kAQlB+9dZttz2+6oTr1yz+Wua51xEIjGSbE+NtU3Esd9tAcV0PoSo6RGNob94ISYFCvvG8YwNtsQotdQb7cRW3J7de92MEg3W2PPwzRtvafM09pYGs+GgRnp9urVkIsixBzMkX39apHEa2x4nx1gnfCWReetfNFIQU1ZQx2h1New1rEnHBlR1tzZ89VTMqVrOx0pYUvY+u6LvjKYo3+ct+3drgN8Z7bnpoYNkbFep0NIOhGLHjZjV++iSksyPxrsW4GtYqCG6p9+7/oepabAsg0NUB6L2FuUgIlIqtV55tR4KsdRXNHrWUYtPSnyQfeoGamusQgWBmT1FTU//dT2/9+qMVqz6H/tWEL58P26oQ3v24wKGZPUWNzTu+9VT6tTVSVOr6S8TMVkMoOLcTRXevhXeCOFew50xtvXyx0ly5ZokBzcRYd9n3+u99huIxSLGPffh9C1QKisd6v/v4hr+/RwjhLwwVu081HDer8YITkc7W0gN4nMHBg+lenkLAoqZ4/z1Pb/nqg1IK5srN3ZgoNH+GNaUNxeHKGEkK5PMTrr8g0N6kVRWllMwASOsNf3v3lqvv0kWP4o3lT7pKK3Uw6EnxRl1wN//vOzdd92MhyK/JqVipR0DH1y+FLflgdWUHq+z35csPBWoNAQRsikUp3uhu7t98xZ0brvx3YlR8vIYW7NiS4yuHrYi4WJKTWjtvu1QzV1VHz+yfBvbc9dzqE64feOCXDKJ4DOFA2b8YugqlobT/93LbAWYEbYo3wrYSD7246sQbtt/3CyH9NaNiF1TpKt36+TMjixfwyKwN7M9kn5BDVoxaaV/pZLBCulDasj3/xrrUs68l/vv3bjIrifYwlXPPvTrYaW6I//WJKFQeMECW5GQ6/rlFrc+u7H38FcuqYtIKA8yWFPlVW9Zd9r3IEU81XXJq4ycXBGdPomi0PJ16sDE+0VD9L+AWS2t7Us+/2X//8uzKNaiiUnzIPFJKhae2dXzjc5zP16UZxNhX2WsBZF58e+t136thpMYuS44ueTqd93YkS1sH3I07vFyRAVH1TRzq1dFx1dnWlIlVTichIhSKnXdfmXtrff79rbK6/4uVFoIIlHtnQ/bGB+RXHwweNiV01PTgnE7nkDartUGEHBCx66lkzt3SX1i1JffGB4W31rv5kt9fdGgYWeVegwQS4pAfXS0nxDmVxcE4UoM1E5B7e0Pm7Q0jP0jxJ04QgRVXS4YQylORrva2a/8KuarXXkEoebK5YfojS1ef8VWVzApRneOgmcFCEBGx0rm3N2QHL5x2n5rAu1yUJQUzqj2RpzLuh3z7C5HFCw/iYTxD9qA1knWvPNqZwYCqxe4SxABZ8pAfXS3ikdraQkrB6Vxg/swZj35lzadu1YWSqH72ip8rTxDkd/sjlMsshsatlIco+wOaampLTVK6nur4P+e1XncBJ1N1bB53EBqkO23S2oY9+1uY0nrqXX8bPuOovaaeD298JNKRsxZ2PXGDiAS00rV9EgxozV7ZIC2/f39clyr/HDXNHyXyyWi/8uxJd1yOVIbq2i5svE+H3C17g7XmqT+4oumKT+7zrBqyJCdS0XOOnbnsZruz2fMUWXK/FDSRFGD2lOq8/oLOf7+KM3m/N4mBo7axCn6HYau1sevJf2r5+/M5mR7J2uuvH+GTD5v90m2x0+e5nvLH/IzpuBlLKKUp5Ey75+/av/kFpHI0CoUz4xcOf2CPEEprpXTT+cfNfuWbjUtO4ERy5B8kWZITGXtya9eymybffDGCjqe0nxM/+lhIZvY8HT1u1qwXb22+4hxOpivOYTEtGAaTK6nsAXqKCYgcM3PiV5bEPn0ilN5rCeS+TcopFEFi4tcuiZ137Labf5b8+R8UWAJkCa5Hrs2HM+wJWmnlKae1ccLSJW3XnENBp46+ySjDQbtUo4xNUuBQKiBROZSu2R8dboWc+JlHtnz+zNg5CxEOIZUB6t0GWgh/2FbwqGnTn/7n9POv7/j+s6llK5WnxeDkWzBzjYbzbuuEIBDY01prBpzWxubPn9n2d+fY0zuQySKdHz0y6gwHe5qZ2VM8ZqPIwbtWHQnAmdIaXtjVcOaRDX9xpHPoFJBAJld7UW6NS0i2AKDh7AUNZ83P/251/8O/ST3zh8LaHvbUzhHJft+YISccH8kUGGLdz2ZTzMz+kGIBRBZ0NV10ctOFJ1tT21EsciJFUo520xji9MN1SaSgxsjmL36/76nf1jB5dSQ2piMp6MiGkGyK2pOanaltgbmTg3MnB7raRVsMEHBLyBd5LE1FP9U0GoKwuD+Z/f376Rfeyqx4t/jnLW4yy7v3zKS9NIDZ9WV2PBKcN7XhjHkNZx0dXtCFUAjFAudLNcwSPBDgKB9YZAuDbUxG37CQgmyLAjZCDoQsn1ZohYLLrufXtI1Zj/APnQ+wZnIshAOAhVLR29JXXLOtsGpzcU13acN2ryepElmdLehCyS9MIinIsUUkIOMRq63RmT4xMGtS6NDJgTmd1uQWWAFoF7kie2rMsKg3HH5rrDF760PhIz3Y0YUG1+QDodydwVrDL7xzLARsQPqlE/AU8kUueewq1hqay8NmHYtCzuArASgUXRQ91tofpIKDuwWDp8e6ktifNnIAdtWhXbazkscFd2gyORFBEoUcCu/CsQ/6h17pl4wLifHQn4MwLrsf1SPisvtt0djT7FLawythWk1+7HA5OJ4iYT4pIwOHkYHDyMBhZOAwMnAYGTiMDBxGBg4jA4eRgcPIyMBhZOAwMnAYGTiMDBxGBg4jA4eRgcPIwGFk4DAyMnAYGTiMDBxGBg4jA4eRgcPIwGFk4DAycBgZOIyMDBxGBg4jA4eRgcPIwGFk4DAycBgZOIwMHEYGDiMDh5GRgcPIwGFk4DAycBgZOIwMHEYGDiMDh5GBw+jjp/8PYxuyv6l0K5QAAAAASUVORK5CYII=">
+<style>
+:root{
+  --giallo:#FFD600; --giallo-pallido:#FFF3A8; --blu:#0D3BA6; --blu-scuro:#082a78; --rosso:#d00000;
+  --sfondo:#f6f7fb; --bordo:#d6dbe8; --testo:#1b1f2a; --tenue:#5b6275; --verde:#1a7f37;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.45;color:var(--testo);background:var(--sfondo)}
+header{background:var(--giallo-pallido);border-bottom:4px solid var(--blu)}
+.testata{max-width:760px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.testata svg{width:64px;height:64px;flex:none;border-radius:14px;box-shadow:0 1px 5px rgba(0,0,0,.22)}
+.testata h1{margin:0;color:var(--blu);font-size:1.6rem;line-height:1.1}
+.testata p{margin:2px 0 0;color:var(--blu-scuro);font-size:.95rem}
+nav{background:var(--blu)}
+nav .schede{max-width:760px;margin:0 auto;display:flex}
+nav button{flex:1;background:none;border:0;color:#fff;font:inherit;font-weight:600;padding:12px 6px;cursor:pointer;border-bottom:4px solid transparent}
+nav button[aria-selected="true"]{border-bottom-color:var(--giallo);color:var(--giallo)}
+nav button:focus-visible{outline:3px solid var(--giallo);outline-offset:-3px}
+main{max-width:760px;margin:0 auto;padding:16px}
+section[hidden]{display:none}
+.card{background:#fff;border:1px solid var(--bordo);border-radius:12px;padding:16px;margin-bottom:16px}
+h2{margin:0 0 12px;font-size:1.25rem;color:var(--blu)}
+h3{margin:20px 0 8px;font-size:1.08rem;color:var(--blu)}
+.riga{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.etichetta{font-weight:600;margin-right:6px}
+.scelta{display:inline-flex;border:2px solid var(--blu);border-radius:10px;overflow:hidden}
+.scelta button{background:#fff;color:var(--blu);border:0;font:inherit;font-weight:700;padding:8px 16px;cursor:pointer;min-width:52px}
+.scelta button+button{border-left:2px solid var(--blu)}
+.scelta button[aria-pressed="true"]{background:var(--blu);color:#fff}
+.btn{background:var(--blu);color:#fff;border:0;border-radius:10px;font:inherit;font-weight:700;padding:11px 22px;cursor:pointer}
+.btn:hover{background:var(--blu-scuro)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.grande{font-size:1.3rem;padding:14px 34px}
+.btn.secondario{background:#fff;color:var(--blu);border:2px solid var(--blu)}
+.btn.secondario:hover{background:#eef2fc}
+.btn:focus-visible,.scelta button:focus-visible,.chip:focus-visible,input:focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
+.stato{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.pill{background:#eef2fc;border-radius:999px;padding:6px 14px;font-weight:600;color:var(--blu-scuro)}
+.pill b{font-variant-numeric:tabular-nums}
+.input-tent{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.input-tent input{font:inherit;font-size:1.7rem;font-weight:700;letter-spacing:.35em;font-family:ui-monospace,Menlo,Consolas,monospace;width:9.2em;padding:8px 12px;border:2px solid var(--blu);border-radius:10px;text-align:center}
+.errore{color:var(--rosso);font-weight:600;margin:10px 0 0}
+.avviso{border-radius:10px;padding:12px 14px;margin:12px 0 0;font-weight:600}
+.avviso.errore-box{background:#fde8e8;color:#8a0000;border:1px solid #f3b4b4}
+.avviso.ok{background:#e7f6ec;color:#0f5a26;border:1px solid #a8dcb8}
+.avviso.info{background:#fff8d6;color:#5a4a00;border:1px solid #f0dc7a}
+.finale{color:var(--rosso);font-weight:800;font-size:1.15rem;margin:14px 0 0;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-variant-numeric:tabular-nums}
+th,td{text-align:center;padding:8px 6px;border-bottom:1px solid var(--bordo)}
+th{background:#eef2fc;color:var(--blu-scuro);font-size:.92rem}
+td.num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.2rem;font-weight:700;letter-spacing:.15em}
+tr.vinto td{color:var(--rosso);font-weight:800}
+.tentativo-solver{font-size:1.2rem;margin:4px 0 12px}
+.tentativo-solver b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.8rem;letter-spacing:.2em;color:var(--blu)}
+.valuta{display:grid;grid-template-columns:auto 1fr;gap:10px 12px;align-items:center;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{width:46px;height:46px;border-radius:10px;border:2px solid var(--blu);background:#fff;color:var(--blu);font:inherit;font-size:1.15rem;font-weight:800;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--blu);color:#fff}
+.nota{color:var(--tenue);font-size:.93rem}
+.help p,.help li{margin:6px 0}
+.help ul{padding-left:22px}
+.help table{max-width:460px}
+.help td{font-family:ui-monospace,Menlo,Consolas,monospace}
+.help td:last-child{font-family:inherit;text-align:left}
+.checkbox{display:inline-flex;align-items:center;gap:8px;font-weight:600;cursor:pointer}
+.checkbox input{width:22px;height:22px;accent-color:var(--blu)}
+select{font:inherit;font-weight:700;padding:7px 10px;border:2px solid var(--blu);border-radius:10px;color:var(--blu);background:#fff}
+footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);font-size:.85rem;text-align:center}
+@media (max-width:480px){
+  body{font-size:16px}
+  .testata svg{width:52px;height:52px}
+  .testata h1{font-size:1.35rem}
+  .card{padding:13px}
+  .valuta{grid-template-columns:1fr}
+  .input-tent input{width:100%}
+  .input-tent .btn{flex:1}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="testata">
+    <svg viewBox="0 0 100 100" role="img" aria-label="Logo BC">
+      <rect width="100" height="100" rx="14" fill="#FFF3A8"/>
+      <text x="50" y="69" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="56" fill="#D00000">BC</text>
+    </svg>
+    <div>
+      <h1>Bulls &amp; Cows</h1>
+      <p>detto anche Numerino – gioco di ragionamento</p>
+    </div>
+  </div>
+  <nav>
+    <div class="schede" role="tablist">
+      <button role="tab" id="tab-gioca" aria-controls="sez-gioca" aria-selected="true">Gioca</button>
+      <button role="tab" id="tab-solver" aria-controls="sez-solver" aria-selected="false">B&amp;C solver</button>
+      <button role="tab" id="tab-regole" aria-controls="sez-regole" aria-selected="false">Regole</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- ===================== GIOCA ===================== -->
+<section id="sez-gioca" role="tabpanel" aria-labelledby="tab-gioca">
+  <div class="card">
+    <h2>Nuova partita</h2>
+    <div class="riga">
+      <div><span class="etichetta">Numero di cifre</span>
+        <span class="scelta" id="g-cifre">
+          <button type="button" data-v="4" aria-pressed="true">4</button><button type="button" data-v="5" aria-pressed="false">5</button>
+        </span>
+      </div>
+      <div><span class="etichetta">Ripetizione cifre</span>
+        <span class="scelta" id="g-rip">
+          <button type="button" data-v="0" aria-pressed="true">No</button><button type="button" data-v="1" aria-pressed="false">Sì</button>
+        </span>
+      </div>
+    </div>
+    <p style="margin:16px 0 0"><button class="btn grande" id="g-gioca">GIOCA</button></p>
+  </div>
+
+  <div class="card" id="g-partita" hidden>
+    <div class="stato">
+      <span class="pill">Tentativo <b id="g-ntent">1</b> di <b id="g-max">13</b></span>
+      <span class="pill">Numeri ancora possibili: <b id="g-poss">0</b></span>
+      <span class="pill">Tempo: <b id="g-tempo">00:00</b></span>
+    </div>
+    <div id="g-area-input">
+      <label for="g-input" class="etichetta" id="g-label">Inserisci un numero di 4 cifre</label>
+      <div class="input-tent" style="margin-top:6px">
+        <input id="g-input" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="····">
+        <button class="btn" id="g-prova">Prova</button>
+        <button class="btn secondario" id="g-arrenditi">Arrenditi</button>
+      </div>
+      <p class="errore" id="g-errore" hidden></p>
+    </div>
+    <div id="g-finale" hidden></div>
+    <table id="g-tabella" hidden>
+      <thead><tr><th>#</th><th>Numero</th><th>Bull</th><th>Cow</th><th>Possibili</th></tr></thead>
+      <tbody id="g-righe"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== B&C SOLVER ===================== -->
+<section id="sez-solver" role="tabpanel" aria-labelledby="tab-solver" hidden>
+  <div class="card">
+    <h2>B&amp;C solver</h2>
+    <p class="nota" style="margin-top:0">Pensa a un numero segreto (o usa quello che hai appena scoperto): il solver cercherà di indovinarlo. Tu valuti ogni suo tentativo con bull e cow.</p>
+    <div class="riga">
+      <div><label for="numPegs" class="etichetta">Numero di cifre</label>
+        <select id="numPegs"><option value="4" selected>4</option><option value="5">5</option></select>
+      </div>
+      <label class="checkbox"><input type="checkbox" id="allowDups" checked> Permetti ripetizione cifre</label>
+      <button id="start" class="btn">Avvia</button>
+    </div>
+    <div id="input-alert" class="avviso errore-box" hidden></div>
+    <div id="sfida-info" class="avviso info" hidden></div>
+  </div>
+
+  <div class="card" id="play-area" hidden>
+    <div id="cur-guess"></div>
+    <div id="cur-guess-alert" class="avviso errore-box" hidden></div>
+    <div id="success" hidden></div>
+    <table id="old-guesses-table" hidden>
+      <thead><tr><th>#</th><th>Tentativi</th><th>Bull</th><th>Cow</th></tr></thead>
+      <tbody id="old-guesses"></tbody>
+    </table>
+  </div>
+  <p class="nota" style="text-align:center">Il motore del B&amp;C solver deriva da <a href="https://github.com/NebuPookins/JS-Mastermind-Solver">JS-Mastermind-Solver</a> di NebuPookins.</p>
+</section>
+
+<!-- ===================== REGOLE ===================== -->
+<section id="sez-regole" role="tabpanel" aria-labelledby="tab-regole" hidden>
+  <div class="card help">
+    <h2>BULLS AND COWS (B&amp;C), detto anche Numerino</h2>
+    <p>Lo scopo del gioco è individuare un numero segreto per mezzo di tentativi successivi. Ad ogni tentativo il giocatore propone un numero, che viene confrontato con il numero segreto. Al numero proposto viene attribuita una <b>valutazione</b> che indica:</p>
+    <ul>
+      <li>quante cifre del numero proposto compaiono nel numero segreto <b>nella posizione esatta</b> (<b>bull</b>);</li>
+      <li>quante cifre del numero proposto compaiono nel numero segreto <b>in una posizione sbagliata</b> (<b>cow</b>).</li>
+    </ul>
+    <p>Grazie a queste informazioni, proponendo numeri via via più mirati, il giocatore deve scoprire il numero segreto con il minor numero di tentativi. Il programma indica anche quanti numeri sono ancora <b>matematicamente possibili</b> dopo ogni tentativo, e il <b>tempo di gioco</b>.</p>
+
+    <h3>Valutazione</h3>
+    <p><b>1. Conteggio dei bull.</b> Si confronta la prima cifra del numero proposto con la prima cifra del numero segreto:</p>
+    <ul>
+      <li>se sono uguali, si attribuisce un bull e si cancella quella cifra, sia dal numero segreto sia dal numero proposto;</li>
+      <li>se sono diverse, non si attribuisce alcun bull.</li>
+    </ul>
+    <p>Si procede allo stesso modo, in successione, per tutte le altre cifre.</p>
+    <p><b>2. Conteggio dei cow.</b> Si riparte dalla prima cifra <i>non cancellata</i> del numero proposto (le cifre che hanno già dato un bull non contano più):</p>
+    <ul>
+      <li>se è uguale a una delle cifre non cancellate del numero segreto, si attribuisce un cow e si cancella quella cifra, sia dal numero segreto sia dal numero proposto;</li>
+      <li>se è diversa da tutte le cifre non cancellate del numero segreto, non si attribuisce alcun cow.</li>
+    </ul>
+    <p>Si procede allo stesso modo, in successione, per tutte le cifre non cancellate del numero proposto.</p>
+    <p>La valutazione è formata da due numeri: il primo è il totale dei bull, il secondo il totale dei cow.</p>
+
+    <h3>Esempi</h3>
+    <table>
+      <thead><tr><th>Segreto</th><th>Tentativo</th><th>Valutazione</th></tr></thead>
+      <tbody>
+        <tr><td>2703</td><td>2571</td><td><b>11</b> (1 bull, 1 cow)</td></tr>
+        <tr><td>7738</td><td>7190</td><td><b>10</b> (1 bull, 0 cow)</td></tr>
+        <tr><td>0071</td><td>3509</td><td><b>01</b> (0 bull, 1 cow)</td></tr>
+        <tr><td>0714</td><td>7738</td><td><b>10</b> (1 bull, 0 cow)</td></tr>
+        <tr><td>3910</td><td>4499</td><td><b>01</b> (0 bull, 1 cow)</td></tr>
+        <tr><td>3371</td><td>3033</td><td><b>11</b> (1 bull, 1 cow)</td></tr>
+        <tr><td>1134</td><td>1567</td><td><b>10</b> (1 bull, 0 cow)</td></tr>
+      </tbody>
+    </table>
+    <p class="nota">Nell'ultimo esempio il primo 1 del tentativo ha già dato un bull, quindi non può dare anche un cow con il secondo 1 del numero segreto.</p>
+    <p>Il gioco finisce quando il giocatore scopre il numero segreto, cioè quando la valutazione è <b>40</b> (con 4 cifre) o <b>50</b> (con 5 cifre). Il giocatore ha a disposizione al massimo <b>13 tentativi</b>: se non scopre il numero entro il 13° tentativo, il numero segreto viene svelato.</p>
+
+    <h3>Numero segreto</h3>
+    <p>A scelta del giocatore, il programma genera numeri segreti di <b>4 o 5 cifre</b>:</p>
+    <ul>
+      <li><b>senza ripetizione</b>: tutte le cifre sono diverse fra loro (es. 2894, 0374, 83971);</li>
+      <li><b>con ripetizione</b>: oltre ai numeri con cifre tutte diverse, sono possibili anche numeri con cifre ripetute (es. 2393, 0000, 69199).</li>
+    </ul>
+    <p>Il numero segreto può iniziare con 0. Scoprire i numeri con ripetizione delle cifre è più difficile.</p>
+
+    <h3>Contro il computer</h3>
+    <p>Dopo aver scoperto il numero segreto con un certo numero di tentativi, si può sfidare il <b>B&amp;C solver</b> (pulsante «Sfida il B&amp;C solver» a fine partita, oppure scheda «B&amp;C solver»). Il solver va impostato come la partita appena giocata (numero di cifre, ripetizione sì/no): il pulsante di sfida lo fa in automatico.</p>
+    <p>Il solver cerca di scoprire <b>lo stesso numero segreto</b> che hai scoperto tu: tu dai la valutazione (bull e cow) a ciascun suo tentativo e premi «Avanti» per il tentativo successivo. Il solver sceglie ogni volta, a caso, un numero compatibile con tutte le valutazioni precedenti.</p>
+    <p>La sfida finisce quando il solver scopre il numero (valutazione 40 o 50). Vince chi, fra giocatore e solver, ha scoperto il numero segreto con meno tentativi.</p>
+
+    <h3>Con più giocatori</h3>
+    <p>Si può giocare anche fra due o più giocatori, ognuno dal proprio telefono. Tutti iniziano la partita contemporaneamente. Ognuno prende tanti punti quanti sono i tentativi che gli sono serviti per individuare il proprio numero segreto; chi non lo individua entro i 13 tentativi prende 14 punti. Al giocatore che individua il numero segreto nel minor tempo viene tolto un punto. Il gioco termina quando tutti hanno individuato il proprio numero segreto o hanno raggiunto 13 tentativi. Vince il giocatore con il punteggio minore.</p>
+    <p>Si può anche giocare una partita su più turni, per esempio tanti turni quanti sono i giocatori: alla fine dei turni vince il giocatore con il punteggio complessivo minore.</p>
+
+  </div>
+</section>
+
+</main>
+<footer>Bulls &amp; Cows – di Antonio Bellini</footer>
+
+<script>
+(function () {
+'use strict';
+
+/* ================= SCHEDE ================= */
+var schede = ['gioca', 'solver', 'regole'];
+function mostraScheda(nome) {
+  schede.forEach(function (s) {
+    document.getElementById('tab-' + s).setAttribute('aria-selected', s === nome ? 'true' : 'false');
+    document.getElementById('sez-' + s).hidden = (s !== nome);
+  });
+  window.scrollTo(0, 0);
+}
+schede.forEach(function (s) {
+  document.getElementById('tab-' + s).addEventListener('click', function () { mostraScheda(s); });
+});
+
+/* Memoria delle ultime impostazioni (nel browser del dispositivo) */
+function leggiMemoria(chiave) {
+  try { return JSON.parse(localStorage.getItem(chiave)) || null; } catch (e) { return null; }
+}
+function scriviMemoria(chiave, valore) {
+  try { localStorage.setItem(chiave, JSON.stringify(valore)); } catch (e) { /* memoria non disponibile */ }
+}
+
+function gruppoScelta(id, quandoCambia) {
+  var el = document.getElementById(id);
+  function imposta(v) {
+    var trovato = el.querySelector('[data-v="' + v + '"]'); if (!trovato) return;
+    el.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === trovato ? 'true' : 'false'); });
+  }
+  el.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    imposta(b.dataset.v);
+    if (quandoCambia) quandoCambia();
+  });
+  var leggi = function () { return el.querySelector('[aria-pressed="true"]').dataset.v; };
+  leggi.imposta = imposta;
+  return leggi;
+}
+function fmtTempo(ms) {
+  var s = Math.floor(ms / 1000), m = Math.floor(s / 60); s = s % 60;
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+/* ================= GIOCO: MOTORE ================= */
+var MAX_TENTATIVI = 13;
+
+/* Tutti i numeri di n cifre (stringhe, anche con 0 iniziale), con o senza ripetizione */
+function tuttiINumeri(n, ripetizione) {
+  var lista = [], tot = Math.pow(10, n);
+  for (var k = 0; k < tot; k++) {
+    var s = String(k); while (s.length < n) s = '0' + s;
+    if (!ripetizione && new Set(s).size !== n) continue;
+    lista.push(s);
+  }
+  return lista;
+}
+
+/* Valutazione secondo le regole: prima i bull, poi i cow sulle cifre non cancellate */
+function valuta(segreto, tentativo) {
+  var n = segreto.length, bull = 0, cow = 0;
+  var segCanc = new Array(n).fill(false), tenCanc = new Array(n).fill(false);
+  for (var i = 0; i < n; i++) {
+    if (tentativo[i] === segreto[i]) { bull++; segCanc[i] = true; tenCanc[i] = true; }
+  }
+  for (var a = 0; a < n; a++) {
+    if (tenCanc[a]) continue;
+    for (var b = 0; b < n; b++) {
+      if (!segCanc[b] && tentativo[a] === segreto[b]) { cow++; segCanc[b] = true; break; }
+    }
+  }
+  return { bull: bull, cow: cow };
+}
+
+/* ================= GIOCO: INTERFACCIA ================= */
+function salvaImpostazioniGioco() { scriviMemoria('bc-gioco', { n: leggiCifre(), rip: leggiRip() }); }
+var leggiCifre = gruppoScelta('g-cifre', salvaImpostazioniGioco);
+var leggiRip = gruppoScelta('g-rip', salvaImpostazioniGioco);
+(function () {
+  var m = leggiMemoria('bc-gioco');
+  if (m) { leggiCifre.imposta(m.n); leggiRip.imposta(m.rip); }
+})();
+var $ = function (id) { return document.getElementById(id); };
+var g = null;   // stato della partita
+var timerId = null;
+
+function aggiornaTempo() { if (g) $('g-tempo').textContent = fmtTempo((g.fine || Date.now()) - g.inizio); }
+
+function nuovaPartita() {
+  if (g && !g.finita && g.storia.length > 0 && !confirm('Interrompere la partita in corso e iniziarne una nuova?')) return;
+  var n = Number(leggiCifre()), rip = leggiRip() === '1';
+  var tutti = tuttiINumeri(n, rip);
+  g = {
+    n: n, rip: rip,
+    segreto: tutti[Math.floor(Math.random() * tutti.length)],
+    possibili: tutti, storia: [], inizio: Date.now(), fine: null, finita: false
+  };
+  clearInterval(timerId); timerId = setInterval(aggiornaTempo, 250); aggiornaTempo();
+  $('g-partita').hidden = false;
+  $('g-area-input').hidden = false;
+  $('g-finale').hidden = true; $('g-finale').innerHTML = '';
+  $('g-righe').innerHTML = ''; $('g-tabella').hidden = true;
+  $('g-errore').hidden = true;
+  $('g-max').textContent = MAX_TENTATIVI;
+  $('g-label').textContent = 'Inserisci un numero di ' + n + ' cifre';
+  var inp = $('g-input'); inp.value = ''; inp.maxLength = n; inp.placeholder = '·'.repeat(n);
+  aggiornaStato();
+  $('g-gioca').textContent = 'NUOVA PARTITA';
+  inp.focus();
+}
+
+function aggiornaStato() {
+  $('g-ntent').textContent = Math.min(g.storia.length + 1, MAX_TENTATIVI);
+  $('g-poss').textContent = g.possibili.length.toLocaleString('it-IT');
+}
+
+function prova() {
+  if (!g || g.finita) return;
+  var inp = $('g-input'), t = inp.value.trim(), err = $('g-errore');
+  if (!new RegExp('^\\d{' + g.n + '}$').test(t)) {
+    err.textContent = 'Inserisci esattamente ' + g.n + ' cifre (da 0 a 9).';
+    err.hidden = false; inp.focus(); return;
+  }
+  err.hidden = true;
+  var v = valuta(g.segreto, t);
+  g.possibili = g.possibili.filter(function (c) {
+    var w = valuta(c, t); return w.bull === v.bull && w.cow === v.cow;
+  });
+  g.storia.push({ t: t, bull: v.bull, cow: v.cow, poss: g.possibili.length });
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + g.storia.length + '</td><td class="num">' + t + '</td><td>' + v.bull + '</td><td>' + v.cow +
+                 '</td><td>' + g.possibili.length.toLocaleString('it-IT') + '</td>';
+  $('g-righe').appendChild(tr); $('g-tabella').hidden = false;
+  inp.value = '';
+  if (v.bull === g.n) { fine(true, tr); return; }
+  if (g.storia.length >= MAX_TENTATIVI) { fine(false, tr); return; }
+  aggiornaStato(); inp.focus();
+}
+
+function fine(vinto, tr) {
+  g.finita = true; g.fine = Date.now(); clearInterval(timerId); aggiornaTempo();
+  aggiornaStato(); $('g-ntent').textContent = g.storia.length;
+  $('g-area-input').hidden = true;
+  var tempo = fmtTempo(g.fine - g.inizio), html;
+  if (vinto) {
+    tr.className = 'vinto';
+    html = '<p class="finale">Hai scoperto il numero segreto!<br>Numero: ' + g.segreto +
+           ' &nbsp;–&nbsp; Valutazione: ' + g.n + '0<br>Tempo impiegato: ' + tempo +
+           ' &nbsp;–&nbsp; Tentativi: ' + g.storia.length + '</p>';
+  } else {
+    html = '<p class="finale">Hai esaurito i ' + MAX_TENTATIVI + ' tentativi.<br>Il numero segreto era: ' + g.segreto +
+           '<br>Tempo impiegato: ' + tempo + '</p>';
+  }
+  html += '<p class="riga" style="margin-top:14px">' +
+          '<button class="btn" id="g-ancora">Nuova partita</button>' +
+          (vinto ? '<button class="btn secondario" id="g-sfida">Sfida il B&amp;C solver</button>' : '') + '</p>';
+  var f = $('g-finale'); f.innerHTML = html; f.hidden = false;
+  $('g-ancora').addEventListener('click', function () { window.scrollTo(0, 0); nuovaPartita(); });
+  if (vinto) $('g-sfida').addEventListener('click', function () {
+    avviaSfida({ segreto: g.segreto, n: g.n, rip: g.rip, tentativi: g.storia.length, tempo: tempo });
+  });
+}
+
+function arrenditi() {
+  if (!g || g.finita) return;
+  if (!confirm('Vuoi davvero arrenderti? Il numero segreto verrà svelato.')) return;
+  g.finita = true; g.fine = Date.now(); clearInterval(timerId); aggiornaTempo();
+  $('g-area-input').hidden = true;
+  var f = $('g-finale');
+  f.innerHTML = '<p class="finale">Partita abbandonata.<br>Il numero segreto era: ' + g.segreto + '</p>' +
+                '<p style="margin-top:14px"><button class="btn" id="g-ancora">Nuova partita</button></p>';
+  f.hidden = false;
+  $('g-ancora').addEventListener('click', function () { window.scrollTo(0, 0); nuovaPartita(); });
+}
+
+$('g-gioca').addEventListener('click', nuovaPartita);
+$('g-prova').addEventListener('click', prova);
+$('g-arrenditi').addEventListener('click', arrenditi);
+$('g-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') prova(); });
+$('g-input').addEventListener('input', function () { this.value = this.value.replace(/\D/g, ''); });
+
+/* ================= B&C SOLVER ================= */
+/* Motore originale di JS-Mastermind-Solver (NebuPookins), invariato */
+
+var globalGameState = null;
+
+function generateAllPossibleGuessesWithDups(numPegs, colors) {
+  if (numPegs < 1) {
+    throw "numPegs must be at least 1.";
+  }
+  if (numPegs === 1) {
+    return colors.slice(0);
+  }
+  let suffixes = generateAllPossibleGuessesWithDups(numPegs - 1, colors);
+  let retVal = [];
+  colors.forEach((color) => {
+    suffixes.forEach((suffix) => {
+      retVal.push([color].concat(suffix));
+    });
+  });
+  return retVal;
+}
+
+function generateAllPossibleGuessesNoDups(numPegs, colors) {
+  if (numPegs < 1) {
+    throw "numPegs must be at least 1.";
+  }
+  if (numPegs === 1) {
+    return colors.slice(0);
+  }
+  let retVal = [];
+  for (let index = 0; index < colors.length; index++) {
+    let firstColor = colors[index];
+    let remainingColors = colors.filter((element, otherIndex) => otherIndex != index);
+    let suffixes = generateAllPossibleGuessesNoDups(numPegs - 1, remainingColors);
+    suffixes.forEach((suffix) => {
+      retVal.push([firstColor].concat(suffix));
+    });
+  }
+  return retVal;
+}
+
+function judgeGuess(answer, guess) {
+  let retVal = {bothCorrect: 0, colorCorrect: 0};
+  let unaccountedForAnswers = [];
+  let unaccountedForGuesses = [];
+  for (let i = 0; i < answer.length; ++i) {
+    if (answer[i] == guess[i]) {
+      retVal.bothCorrect++;
+    } else {
+      unaccountedForAnswers.push(answer[i]);
+      unaccountedForGuesses.push(guess[i]);
+    }
+  }
+  unaccountedForAnswers.forEach((a) => {
+    var guessIndex = unaccountedForGuesses.indexOf(a);
+    if (guessIndex != -1) {
+      retVal.colorCorrect++;
+      unaccountedForGuesses.splice(guessIndex, 1);
+    }
+  })
+  return retVal;
+}
+
+function guessContradictsSomeEvidence(guess, evidences) {
+  for (let key in evidences) {
+    let evidence = evidences[key];
+    let judgement = judgeGuess(guess, evidence.guess);
+    if ((judgement.bothCorrect != evidence.bothCorrect) || (judgement.colorCorrect != evidence.colorCorrect)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function quickRemoveFromArray(index, array) {
+  var arrayLength = array.length;
+  if (index >= arrayLength || index < 0) {
+    throw "Tried to access index " + index + " from array of length " + arrayLength;
+  }
+  if (arrayLength === 1) {
+    return array.pop();
+  }
+  var retVal = array[index];
+  var lastElement = array.pop();
+  array[index] = lastElement;
+  return retVal;
+}
+
+function generateNextGuess(gameState, evidence) {
+  let guessIndex = Math.floor(Math.random() * gameState.possibleGuesses.length);
+  let guess = quickRemoveFromArray(guessIndex, gameState.possibleGuesses);
+  while (guessContradictsSomeEvidence(guess, evidence)) {
+    if (gameState.possibleGuesses.length < 1) {
+      return null;
+    }
+    guessIndex = Math.floor(Math.random() * gameState.possibleGuesses.length);
+    guess = quickRemoveFromArray(guessIndex, gameState.possibleGuesses);
+  }
+  if (typeof guess !== 'object') {
+    throw "Expected guess to be an array, but it was " + (typeof guess);
+  }
+  return guess;
+}
+
+/* ---- Interfaccia del solver (in italiano) ---- */
+var COLORI = ['1','2','3','4','5','6','7','8','9','0'];   // cifre fisse, non modificabili
+var evidenze = [];         // tentativi già valutati
+var tentativoCorrente = null;
+var sfida = null;          // dati della partita del giocatore, se si sta sfidando il solver
+
+function guessToString(guess) { return guess.join(''); }
+
+function chips(nome, max) {
+  var h = '<div class="chips" data-gruppo="' + nome + '">';
+  for (var i = 0; i <= max; i++) h += '<button type="button" class="chip" data-v="' + i + '" aria-pressed="' + (i === 0) + '">' + i + '</button>';
+  return h + '</div>';
+}
+function valoreChip(nome) {
+  return parseInt(document.querySelector('[data-gruppo="' + nome + '"] [aria-pressed="true"]').dataset.v, 10);
+}
+
+function mostraTentativoSolver() {
+  var n = globalGameState.numPegs;
+  $('cur-guess').innerHTML =
+    '<p class="tentativo-solver">Tentativo n. ' + (evidenze.length + 1) + ': forse è <b>' + guessToString(tentativoCorrente) + '</b>?</p>' +
+    '<div class="valuta">' +
+      '<span class="etichetta">Bull <span class="nota">(cifra giusta al posto giusto)</span></span>' + chips('bull', n) +
+      '<span class="etichetta">Cow <span class="nota">(cifra giusta al posto sbagliato)</span></span>' + chips('cow', n) +
+    '</div>' +
+    '<button class="btn" id="avanti">Avanti</button>';
+  $('cur-guess').hidden = false;
+}
+
+function aggiungiRigaSolver(guess, bull, cow, vinta) {
+  var tr = document.createElement('tr');
+  if (vinta) tr.className = 'vinto';
+  tr.innerHTML = '<td>' + ($('old-guesses').children.length + 1) + '</td><td class="num">' + guessToString(guess) +
+                 '</td><td>' + bull + '</td><td>' + cow + '</td>';
+  $('old-guesses').appendChild(tr);
+  $('old-guesses-table').hidden = false;
+}
+
+function prossimoTentativo() {
+  var guess;
+  try { guess = globalGameState.possibleGuesses.length ? generateNextGuess(globalGameState, evidenze) : null; }
+  catch (e) { guess = null; }
+  if (guess == null) {
+    $('cur-guess').hidden = true;
+    var a = $('cur-guess-alert');
+    a.textContent = 'Non ci sono più tentativi possibili: potrebbe esserci una contraddizione nelle valutazioni che hai inserito. Clicca su «Ricomincia» per iniziare una nuova partita.';
+    a.hidden = false;
+    return;
+  }
+  tentativoCorrente = guess;
+  mostraTentativoSolver();
+}
+
+function avanti() {
+  var n = globalGameState.numPegs;
+  var bull = valoreChip('bull'), cow = valoreChip('cow');
+  var a = $('cur-guess-alert'); a.hidden = true;
+  if (bull + cow > n) {
+    a.textContent = 'La somma di bull e cow non può superare il numero di cifre (' + n + ').';
+    a.hidden = false; return;
+  }
+  if (bull === n) {
+    aggiungiRigaSolver(tentativoCorrente, bull, cow, true);
+    $('cur-guess').hidden = true;
+    var tent = $('old-guesses').children.length;
+    var h = '<p class="finale">Il B&amp;C solver ha scoperto il numero!<br>Numero: ' + guessToString(tentativoCorrente) +
+            ' &nbsp;–&nbsp; Valutazione: ' + n + '0 &nbsp;–&nbsp; Tentativi: ' + tent + '</p>';
+    if (sfida) {
+      var esito = sfida.tentativi < tent ? 'Hai vinto tu!' : (sfida.tentativi > tent ? 'Ha vinto il B&amp;C solver!' : 'Pareggio!');
+      h += '<p class="finale">Tu: ' + sfida.tentativi + ' tentativi &nbsp;–&nbsp; Solver: ' + tent + ' tentativi<br>' + esito + '</p>';
+    }
+    h += '<div class="avviso ok">Congratulazioni! Clicca su «Ricomincia» per giocare di nuovo.</div>';
+    $('success').innerHTML = h; $('success').hidden = false;
+    return;
+  }
+  evidenze.push({ guess: tentativoCorrente, bothCorrect: bull, colorCorrect: cow });
+  aggiungiRigaSolver(tentativoCorrente, bull, cow, false);
+  prossimoTentativo();
+}
+
+function avviaSolver() {
+  $('old-guesses').innerHTML = ''; $('old-guesses-table').hidden = true;
+  $('cur-guess').innerHTML = ''; $('input-alert').hidden = true;
+  $('cur-guess-alert').hidden = true; $('success').hidden = true;
+  var numPegs = parseInt($('numPegs').value, 10);
+  var allowDups = $('allowDups').checked;
+  salvaImpostazioniSolver();
+  var possibleGuesses = allowDups ? generateAllPossibleGuessesWithDups(numPegs, COLORI)
+                                  : generateAllPossibleGuessesNoDups(numPegs, COLORI);
+  globalGameState = { numPegs: numPegs, colors: COLORI, allowDups: allowDups, possibleGuesses: possibleGuesses };
+  evidenze = [];
+  $('start').textContent = 'Ricomincia';
+  $('play-area').hidden = false;
+  if (sfida && (sfida.n !== numPegs || sfida.rip !== allowDups)) { sfida = null; $('sfida-info').hidden = true; }
+  prossimoTentativo();
+}
+
+function avviaSfida(dati) {
+  sfida = dati;
+  $('numPegs').value = String(dati.n);
+  $('allowDups').checked = dati.rip;
+  $('sfida-info').innerHTML = 'Sfida in corso: il numero segreto da usare è <b>' + dati.segreto + '</b>, che hai scoperto in <b>' +
+    dati.tentativi + '</b> tentativi (tempo ' + dati.tempo + '). Valuta ogni tentativo del solver con bull e cow.';
+  $('sfida-info').hidden = false;
+  mostraScheda('solver');
+  avviaSolver();
+}
+
+$('start').addEventListener('click', avviaSolver);
+
+function salvaImpostazioniSolver() {
+  scriviMemoria('bc-solver', { n: $('numPegs').value, rip: $('allowDups').checked });
+}
+$('numPegs').addEventListener('change', salvaImpostazioniSolver);
+$('allowDups').addEventListener('change', salvaImpostazioniSolver);
+(function () {
+  var m = leggiMemoria('bc-solver');
+  if (m) {
+    if (m.n === '4' || m.n === '5') $('numPegs').value = m.n;
+    $('allowDups').checked = !!m.rip;
+  }
+})();
+$('cur-guess').addEventListener('click', function (e) {
+  var c = e.target.closest('.chip');
+  if (c) {
+    c.parentNode.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', x === c ? 'true' : 'false'); });
+    return;
+  }
+  if (e.target.id === 'avanti') avanti();
+});
+
+})();
+</script>
+</body>
+</html>
