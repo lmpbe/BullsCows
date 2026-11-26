@@ -423,6 +423,7 @@ function mostraPartita() {
     aggiungiRiga(s, i + 1, g.finita && g.esito === 'vinto' && i === g.storia.length - 1);
   });
   clearInterval(timerId);
+  evidenziaNuovaPartita();
   if (g.finita) {
     $('g-area-input').hidden = true;
     mostraFinale();
@@ -508,6 +509,11 @@ function termina(esito) {
   chiudiTastierino(); mostraElenco();
 }
 
+/* Il tasto «Nuova partita» in alto è evidenziato solo a partita persa o abbandonata */
+function evidenziaNuovaPartita() {
+  $('g-nuova').classList.toggle('secondario', !(g && g.finita && g.esito !== 'vinto'));
+}
+
 function mostraFinale() {
   var tempo = fmtTempo(g.fine - g.inizio), html;
   if (g.esito === 'vinto') {
@@ -520,11 +526,9 @@ function mostraFinale() {
   } else {
     html = '<p class="finale">Partita abbandonata.<br>Il numero segreto era: ' + g.segreto + '</p>';
   }
-  html += '<p class="riga" style="margin-top:14px">' +
-          '<button class="btn" id="g-ancora">Nuova partita</button>' +
-          (g.esito === 'vinto' ? '<button class="btn secondario" id="g-sfida">Sfida il B&amp;C solver</button>' : '') + '</p>';
+  if (g.esito === 'vinto') html += '<p style="margin-top:14px"><button class="btn" id="g-sfida">Sfida il B&amp;C solver</button></p>';
   var f = $('g-finale'); f.innerHTML = html; f.hidden = false;
-  $('g-ancora').addEventListener('click', apriImpostazioni);
+  evidenziaNuovaPartita();
   if (g.esito === 'vinto') $('g-sfida').addEventListener('click', function () {
     avviaSfida({ segreto: g.segreto, n: g.n, rip: g.rip, tentativi: g.storia.length, tempo: tempo });
   });
@@ -701,6 +705,7 @@ function mostraTentativoSolver() {
     '</div>' +
     '<button class="btn" id="avanti">Avanti</button>';
   $('cur-guess').hidden = false;
+  $('start').classList.add('secondario');
 }
 
 /* Numeri ancora possibili dopo ogni valutazione: stesso calcolo della tabella del gioco,
@@ -726,6 +731,7 @@ function aggiungiRigaSolver(guess, bull, cow, vinta) {
 
 function mostraErroreSolver() {
   $('cur-guess').hidden = true;
+  $('start').classList.remove('secondario');
   var a = $('cur-guess-alert');
   a.textContent = 'Non ci sono più tentativi possibili: potrebbe esserci una contraddizione nelle valutazioni che hai inserito. Clicca su «Ricomincia» per iniziare una nuova partita.';
   a.hidden = false;
@@ -734,13 +740,13 @@ function mostraErroreSolver() {
 function mostraSuccessoSolver() {
   var n = globalGameState.numPegs, tent = evidenze.length + 1;
   $('cur-guess').hidden = true;
+  $('start').classList.remove('secondario');
   var h = '<p class="finale">Il B&amp;C solver ha scoperto il numero!<br>Numero: ' + guessToString(tentativoCorrente) +
           ' &nbsp;–&nbsp; Valutazione: ' + n + '0 &nbsp;–&nbsp; Tentativi: ' + tent + '</p>';
   if (sfida) {
     var esito = sfida.tentativi < tent ? 'Hai vinto tu!' : (sfida.tentativi > tent ? 'Ha vinto il B&amp;C solver!' : 'Pareggio!');
     h += '<p class="finale">Tu: ' + sfida.tentativi + ' tentativi &nbsp;–&nbsp; Solver: ' + tent + ' tentativi<br>' + esito + '</p>';
   }
-  h += '<div class="avviso ok">Congratulazioni! Clicca su «Ricomincia» per giocare di nuovo.</div>';
   $('success').innerHTML = h; $('success').hidden = false;
 }
 
