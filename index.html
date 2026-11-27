@@ -85,9 +85,10 @@ h3{margin:20px 0 8px;font-size:1.08rem;color:var(--blu)}
 .avviso.info{background:#fff8d6;color:#5a4a00;border:1px solid #f0dc7a}
 .finale{color:var(--rosso);font-weight:800;font-size:1.15rem;margin:14px 0 0;line-height:1.6}
 table{width:100%;border-collapse:collapse;margin-top:12px;font-variant-numeric:tabular-nums}
-th,td{text-align:center;padding:8px 6px;border-bottom:1px solid var(--bordo)}
+th,td{text-align:center;padding:3px 6px;line-height:1.3;border-bottom:1px solid var(--bordo)}
+th{padding:6px}
 th{background:#eef2fc;color:var(--blu-scuro);font-size:.92rem}
-td.num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.2rem;font-weight:700;letter-spacing:.15em}
+td.num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.15rem;font-weight:700;letter-spacing:.15em}
 tr.vinto td{color:var(--rosso);font-weight:800}
 .tentativo-solver{font-size:1.2rem;margin:4px 0 12px}
 .tentativo-solver b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.8rem;letter-spacing:.2em;color:var(--blu)}
@@ -246,7 +247,7 @@ footer{max-width:760px;margin:0 auto;padding:4px 16px 28px;color:var(--tenue);fo
       <li>se è diversa da tutte le cifre non cancellate del numero segreto, non si attribuisce alcun cow.</li>
     </ul>
     <p>Si procede allo stesso modo, in successione, per tutte le cifre non cancellate del numero proposto.</p>
-    <p><b>In sintesi</b>, nel conteggio i bull si contano prima dei cow, e ogni singola cifra del numero segreto e del numero proposto che dà un bull o un cow deve essere contata una sola volta.</p>
+    <p><b>In sintesi</b>, nel conteggio i bull si contano prima dei cow, e ogni singola cifra del numero segreto e del numero proposto che dà un bull o un cow deve essere considerata una sola volta.</p>
     <p>La valutazione è formata da due numeri: il primo è il totale dei bull, il secondo il totale dei cow.</p>
 
     <h3>Esempi</h3>
@@ -518,8 +519,7 @@ function mostraFinale() {
   var tempo = fmtTempo(g.fine - g.inizio), html;
   if (g.esito === 'vinto') {
     html = '<p class="finale">Hai scoperto il numero segreto!<br>Numero: ' + g.segreto +
-           ' &nbsp;–&nbsp; Valutazione: ' + g.n + '0<br>Tempo impiegato: ' + tempo +
-           ' &nbsp;–&nbsp; Tentativi: ' + g.storia.length + '</p>';
+           ' &nbsp;–&nbsp; Tentativi: ' + g.storia.length + '<br>Tempo impiegato: ' + tempo + '</p>';
   } else if (g.esito === 'perso') {
     html = '<p class="finale">Hai esaurito i ' + MAX_TENTATIVI + ' tentativi.<br>Il numero segreto era: ' + g.segreto +
            '<br>Tempo impiegato: ' + tempo + '</p>';
@@ -742,18 +742,19 @@ function mostraSuccessoSolver() {
   $('cur-guess').hidden = true;
   $('start').classList.remove('secondario');
   var h = '<p class="finale">Il B&amp;C solver ha scoperto il numero!<br>Numero: ' + guessToString(tentativoCorrente) +
-          ' &nbsp;–&nbsp; Valutazione: ' + n + '0 &nbsp;–&nbsp; Tentativi: ' + tent + '</p>';
+          ' &nbsp;–&nbsp; Tentativi: ' + tent;
   if (sfida) {
     var esito = sfida.tentativi < tent ? 'Hai vinto tu!' : (sfida.tentativi > tent ? 'Ha vinto il B&amp;C solver!' : 'Pareggio!');
-    h += '<p class="finale">Tu: ' + sfida.tentativi + ' tentativi &nbsp;–&nbsp; Solver: ' + tent + ' tentativi<br>' + esito + '</p>';
+    h += '<br>Tu: ' + sfida.tentativi + ' tentativi &nbsp;–&nbsp; Solver: ' + tent + ' tentativi<br>' + esito;
   }
+  h += '</p>';
   $('success').innerHTML = h; $('success').hidden = false;
 }
 
 function mostraSfida() {
   if (!sfida) { $('sfida-info').hidden = true; return; }
   $('sfida-info').innerHTML = 'Sfida in corso: il numero segreto da usare è <b>' + sfida.segreto + '</b>, che hai scoperto in <b>' +
-    sfida.tentativi + '</b> tentativi (tempo ' + sfida.tempo + '). Valuta ogni tentativo del solver con bull e cow.';
+    sfida.tentativi + '</b> tentativi';
   $('sfida-info').hidden = false;
 }
 
